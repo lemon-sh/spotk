@@ -1,11 +1,8 @@
 use color_eyre::{eyre::eyre, Result};
 use serde::Deserialize;
 use std::{
-    collections::HashMap,
-    env,
-    fs::{self, File},
-    io::{self, ErrorKind, Read, Write},
-    path::PathBuf,
+    fs::File,
+    io::{ErrorKind, Read, Write},
 };
 
 use crate::paths;

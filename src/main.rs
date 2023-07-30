@@ -1,4 +1,4 @@
-use std::{env, os::raw};
+use std::env;
 
 use cache::Cache;
 use color_eyre::{eyre::eyre, Result};
@@ -18,7 +18,7 @@ mod spotify;
 mod track;
 
 fn main() -> Result<()> {
-    let mut config = match config::load()? {
+    let config = match config::load()? {
         LoadResult::Opened(c) => c,
         LoadResult::Created(path) => {
             eprintln!(
@@ -104,26 +104,97 @@ fn print_track(track: &Track) {
         _ => "no idea",
     };
 
-    eprintln!("{}: {}", "name".if_supports_color(Stdout, |v| v.color(spinner.next())), track.name);
-    eprintln!("{}: {}", "artists".if_supports_color(Stdout, |v| v.color(spinner.next())), track.artists);
-    eprintln!("{}: {}", "album".if_supports_color(Stdout, |v| v.color(spinner.next())), track.album);
-    eprintln!("{}: {}", "album cover".if_supports_color(Stdout, |v| v.color(spinner.next())), track.album_cover.as_deref().unwrap_or("none"));
-    eprintln!("{}: {}", "release date".if_supports_color(Stdout, |v| v.color(spinner.next())), track.release_date.as_deref().unwrap_or("no idea"));
-    eprintln!("{}: {dur_min}:{dur_sec}", "duration".if_supports_color(Stdout, |v| v.color(spinner.next())));
-    eprintln!("{}: {}", "explicit".if_supports_color(Stdout, |v| v.color(spinner.next())), track.explicit);
-    eprintln!("{}: {}", "danceability".if_supports_color(Stdout, |v| v.color(spinner.next())), track.danceability);
-    eprintln!("{}: {}", "acousticness".if_supports_color(Stdout, |v| v.color(spinner.next())), track.acousticness);
-    eprintln!("{}: {}", "energy".if_supports_color(Stdout, |v| v.color(spinner.next())), track.energy);
-    eprintln!("{}: {}", "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next())), track.instrumentalness);
-    eprintln!("{}: {}", "liveness".if_supports_color(Stdout, |v| v.color(spinner.next())), track.liveness);
-    eprintln!("{}: {}", "loudness".if_supports_color(Stdout, |v| v.color(spinner.next())), track.loudness);
-    eprintln!("{}: {}", "speechiness".if_supports_color(Stdout, |v| v.color(spinner.next())), track.speechiness);
-    eprintln!("{}: {}", "tempo".if_supports_color(Stdout, |v| v.color(spinner.next())), track.tempo);
-    eprintln!("{}: {}", "valence".if_supports_color(Stdout, |v| v.color(spinner.next())), track.valence);
-    eprintln!("{}: {}/4", "time signature".if_supports_color(Stdout, |v| v.color(spinner.next())), track.time_signature);
+    eprintln!(
+        "{}: {}",
+        "name".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.name
+    );
+    eprintln!(
+        "{}: {}",
+        "artists".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.artists
+    );
+    eprintln!(
+        "{}: {}",
+        "album".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.album
+    );
+    eprintln!(
+        "{}: {}",
+        "album cover".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.album_cover.as_deref().unwrap_or("none")
+    );
+    eprintln!(
+        "{}: {}",
+        "release date".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.release_date.as_deref().unwrap_or("no idea")
+    );
+    eprintln!(
+        "{}: {dur_min}:{dur_sec}",
+        "duration".if_supports_color(Stdout, |v| v.color(spinner.next()))
+    );
+    eprintln!(
+        "{}: {}",
+        "explicit".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.explicit
+    );
+    eprintln!(
+        "{}: {}",
+        "danceability".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.danceability
+    );
+    eprintln!(
+        "{}: {}",
+        "acousticness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.acousticness
+    );
+    eprintln!(
+        "{}: {}",
+        "energy".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.energy
+    );
+    eprintln!(
+        "{}: {}",
+        "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.instrumentalness
+    );
+    eprintln!(
+        "{}: {}",
+        "liveness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.liveness
+    );
+    eprintln!(
+        "{}: {}",
+        "loudness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.loudness
+    );
+    eprintln!(
+        "{}: {}",
+        "speechiness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.speechiness
+    );
+    eprintln!(
+        "{}: {}",
+        "tempo".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.tempo
+    );
+    eprintln!(
+        "{}: {}",
+        "valence".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.valence
+    );
+    eprintln!(
+        "{}: {}/4",
+        "time signature".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        track.time_signature
+    );
 
-    eprintln!("{}: {key}", "key".if_supports_color(Stdout, |v| v.color(spinner.next())));
-    eprintln!("{}: {mode}", "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next())));
-
-
+    eprintln!(
+        "{}: {key}",
+        "key".if_supports_color(Stdout, |v| v.color(spinner.next()))
+    );
+    eprintln!(
+        "{}: {mode}",
+        "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next()))
+    );
 }

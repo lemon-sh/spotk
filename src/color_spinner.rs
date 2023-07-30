@@ -9,7 +9,10 @@ pub struct ColorSpinner {
 
 impl ColorSpinner {
     pub fn new(colors: &'static [AnsiColors]) -> Self {
-        Self { colors, i: AtomicUsize::default() }
+        Self {
+            colors,
+            i: AtomicUsize::default(),
+        }
     }
 
     pub fn next(&self) -> AnsiColors {

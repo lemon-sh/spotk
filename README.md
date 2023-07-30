@@ -1,3 +1,3 @@
 # spotk
 
-minimal tool for retrieving detailed track info from Spotify
+minimal tool for retrieving audio features from Spotify

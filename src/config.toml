@@ -1,0 +1,3 @@
+[api]
+id = "<your spotify app id here>"
+secret = "<your spotify app token here>"

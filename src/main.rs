@@ -195,6 +195,6 @@ fn print_track(track: &Track) {
     );
     eprintln!(
         "{}: {mode}",
-        "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next()))
+        "mode".if_supports_color(Stdout, |v| v.color(spinner.next()))
     );
 }

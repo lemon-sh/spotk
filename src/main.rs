@@ -58,6 +58,7 @@ fn main() -> Result<()> {
     if let Some(track) = cache.get(raw_track_id)? {
         print_track(&track)
     } else {
+        eprintln!("{}", "Track not in cache, fetching from the API...".if_supports_color(Stdout, OwoColorize::bright_green));
         let spotify = Spotify::login(Credentials::new(&config.api.id, &config.api.secret))?;
         let track = spotify.fetch_track(track_id, raw_track_id)?;
         print_track(&track);

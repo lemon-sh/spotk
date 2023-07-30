@@ -180,15 +180,16 @@ dependencies = [
 
 [[package]]
 name = "cookie_store"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bca9b3c618262fc0c85ecbc814c144e04be9c6eec08b315e7cd1cfbe0bb6ca84"
+checksum = "d5a18f35792056f8c7c2de9c002e7e4fe44c7b5f66e7d99f46468dbb730a7ea7"
 dependencies = [
  "cookie",
  "idna 0.3.0",
  "indexmap 1.9.3",
  "log",
  "serde",
+ "serde_derive",
  "serde_json",
  "time 0.3.23",
  "url",

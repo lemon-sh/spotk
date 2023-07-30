@@ -41,7 +41,7 @@ impl Cache {
     }
 
     pub fn set(&mut self, t: Track) -> rusqlite::Result<()> {
-        let mut stmt = self.0.prepare("insert into tracks(id,name,artists,album,album_cover,release_date,duration,explicit,danceability,acousticness,energy,instrumentalness,key,mode,liveness,loudness,speechiness,tempo,valence,time_signature values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")?;
+        let mut stmt = self.0.prepare("insert into tracks(id,name,artists,album,album_cover,release_date,duration,explicit,danceability,acousticness,energy,instrumentalness,key,mode,liveness,loudness,speechiness,tempo,valence,time_signature) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")?;
         stmt.execute(params![
             t.id,
             t.name,

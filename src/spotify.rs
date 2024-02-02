@@ -19,7 +19,7 @@ impl Spotify {
     }
 
     pub fn fetch_track(&self, id: TrackId, raw_id: [u8; 16]) -> Result<Track> {
-        let fulltrack = self.spotify.track(id.clone())?;
+        let fulltrack = self.spotify.track(id.clone(), None)?;
         let features = self.spotify.track_features(id)?;
 
         let name = fulltrack.name;
@@ -27,18 +27,6 @@ impl Spotify {
         let release_date = fulltrack.album.release_date;
         let duration = i32::try_from(fulltrack.duration.num_seconds())?;
         let explicit = fulltrack.explicit;
-
-        let danceability = features.danceability;
-        let acousticness = features.acousticness;
-        let energy = features.energy;
-        let instrumentalness = features.instrumentalness;
-        let key = features.key;
-        let liveness = features.liveness;
-        let loudness = features.loudness;
-        let speechiness = features.speechiness;
-        let tempo = features.tempo;
-        let valence = features.valence;
-        let time_signature = features.time_signature;
 
         let mode = match features.mode {
             Modality::Major => 1,
@@ -68,18 +56,18 @@ impl Spotify {
             release_date,
             duration,
             explicit,
-            danceability,
-            acousticness,
-            energy,
-            instrumentalness,
-            key,
+            danceability: features.danceability,
+            acousticness: features.acousticness,
+            energy: features.energy,
+            instrumentalness: features.instrumentalness,
+            key: features.key,
             mode,
-            liveness,
-            loudness,
-            speechiness,
-            tempo,
-            valence,
-            time_signature,
+            liveness: features.liveness,
+            loudness: features.loudness,
+            speechiness: features.speechiness,
+            tempo: features.tempo,
+            valence: features.valence,
+            time_signature: features.time_signature,
         })
     }
 }

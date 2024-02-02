@@ -3,8 +3,8 @@ use std::env;
 use cache::Cache;
 use color_eyre::{eyre::eyre, Result};
 use color_spinner::ColorSpinner;
+use colored::{Color, Colorize};
 use config::LoadResult;
-use owo_colors::{AnsiColors, OwoColorize, Stream::Stdout};
 use paths::get_cachepath;
 use rspotify::{model::TrackId, prelude::Id, Credentials};
 use spotify::Spotify;
@@ -18,15 +18,18 @@ mod spotify;
 mod track;
 
 fn main() -> Result<()> {
+    #[cfg(windows)]
+    colored::control::set_virtual_terminal(true).unwrap();
+
+    color_eyre::install()?;
+
     let config = match config::load()? {
         LoadResult::Opened(c) => c,
         LoadResult::Created(path) => {
             eprintln!(
                 "{} {path}\n{}",
-                "A new configuration file has been created in"
-                    .if_supports_color(Stdout, OwoColorize::bright_green),
-                "Adjust it and run spotk again."
-                    .if_supports_color(Stdout, OwoColorize::bright_magenta)
+                "A new configuration file has been created in".bright_green(),
+                "Adjust it and run spotk again.".bright_magenta()
             );
             return Ok(());
         }
@@ -58,7 +61,10 @@ fn main() -> Result<()> {
     if let Some(track) = cache.get(raw_track_id)? {
         print_track(&track)
     } else {
-        eprintln!("{}", "Track not in cache, fetching from the API...".if_supports_color(Stdout, OwoColorize::bright_green));
+        eprintln!(
+            "{}",
+            "Track not in cache, fetching from the API...".bright_green()
+        );
         let spotify = Spotify::login(Credentials::new(&config.api.id, &config.api.secret))?;
         let track = spotify.fetch_track(track_id, raw_track_id)?;
         print_track(&track);
@@ -70,12 +76,12 @@ fn main() -> Result<()> {
 
 fn print_track(track: &Track) {
     let allowed_colors = &[
-        AnsiColors::BrightBlue,
-        AnsiColors::BrightCyan,
-        AnsiColors::BrightGreen,
-        AnsiColors::BrightMagenta,
-        AnsiColors::BrightRed,
-        AnsiColors::BrightYellow,
+        Color::BrightBlue,
+        Color::BrightCyan,
+        Color::BrightGreen,
+        Color::BrightMagenta,
+        Color::BrightRed,
+        Color::BrightYellow,
     ];
     let spinner = ColorSpinner::new(allowed_colors);
 
@@ -105,97 +111,52 @@ fn print_track(track: &Track) {
         _ => "no idea",
     };
 
+    eprintln!("{}: {}", "name".color(spinner.next()), track.name);
+    eprintln!("{}: {}", "artists".color(spinner.next()), track.artists);
+    eprintln!("{}: {}", "album".color(spinner.next()), track.album);
     eprintln!(
         "{}: {}",
-        "name".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.name
-    );
-    eprintln!(
-        "{}: {}",
-        "artists".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.artists
-    );
-    eprintln!(
-        "{}: {}",
-        "album".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.album
-    );
-    eprintln!(
-        "{}: {}",
-        "album cover".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "album cover".color(spinner.next()),
         track.album_cover.as_deref().unwrap_or("none")
     );
     eprintln!(
         "{}: {}",
-        "release date".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "release date".color(spinner.next()),
         track.release_date.as_deref().unwrap_or("no idea")
     );
-    eprintln!(
-        "{}: {dur_min}:{dur_sec}",
-        "duration".if_supports_color(Stdout, |v| v.color(spinner.next()))
-    );
+    eprintln!("{}: {dur_min}:{dur_sec}", "duration".color(spinner.next()));
+    eprintln!("{}: {}", "explicit".color(spinner.next()), track.explicit);
     eprintln!(
         "{}: {}",
-        "explicit".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.explicit
-    );
-    eprintln!(
-        "{}: {}",
-        "danceability".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "danceability".color(spinner.next()),
         track.danceability
     );
     eprintln!(
         "{}: {}",
-        "acousticness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "acousticness".color(spinner.next()),
         track.acousticness
     );
+    eprintln!("{}: {}", "energy".color(spinner.next()), track.energy);
     eprintln!(
         "{}: {}",
-        "energy".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.energy
-    );
-    eprintln!(
-        "{}: {}",
-        "instrumentalness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "instrumentalness".color(spinner.next()),
         track.instrumentalness
     );
+    eprintln!("{}: {}", "liveness".color(spinner.next()), track.liveness);
+    eprintln!("{}: {}", "loudness".color(spinner.next()), track.loudness);
     eprintln!(
         "{}: {}",
-        "liveness".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.liveness
-    );
-    eprintln!(
-        "{}: {}",
-        "loudness".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.loudness
-    );
-    eprintln!(
-        "{}: {}",
-        "speechiness".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "speechiness".color(spinner.next()),
         track.speechiness
     );
-    eprintln!(
-        "{}: {}",
-        "tempo".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.tempo
-    );
-    eprintln!(
-        "{}: {}",
-        "valence".if_supports_color(Stdout, |v| v.color(spinner.next())),
-        track.valence
-    );
+    eprintln!("{}: {}", "tempo".color(spinner.next()), track.tempo);
+    eprintln!("{}: {}", "valence".color(spinner.next()), track.valence);
     eprintln!(
         "{}: {}/4",
-        "time signature".if_supports_color(Stdout, |v| v.color(spinner.next())),
+        "time signature".color(spinner.next()),
         track.time_signature
     );
 
-    eprintln!(
-        "{}: {key}",
-        "key".if_supports_color(Stdout, |v| v.color(spinner.next()))
-    );
-    eprintln!(
-        "{}: {mode}",
-        "mode".if_supports_color(Stdout, |v| v.color(spinner.next()))
-    );
+    eprintln!("{}: {key}", "key".color(spinner.next()));
+    eprintln!("{}: {mode}", "mode".color(spinner.next()));
 }

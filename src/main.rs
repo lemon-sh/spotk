@@ -6,7 +6,7 @@ use color_spinner::ColorSpinner;
 use colored::{Color, Colorize};
 use config::LoadResult;
 use paths::get_cachepath;
-use rspotify::{model::TrackId, prelude::Id, Credentials};
+use rspotify::{prelude::Id, Credentials};
 use spotify::Spotify;
 use track::Track;
 
@@ -35,23 +35,12 @@ fn main() -> Result<()> {
         }
     };
 
-    let mut args: Vec<String> = env::args().skip(1).collect();
-
-    let mut flags: Vec<char> = Vec::new();
-    args.retain(|a| {
-        let mut chars = a.chars();
-        if a.len() != 2 || chars.next() != Some('-') {
-            true
-        } else {
-            flags.push(chars.next().unwrap());
-            false
-        }
-    });
+    let mut args = env::args().skip(1);
 
     let uri = args
-        .pop()
-        .ok_or_else(|| eyre!("No Spotify URI specified"))?;
-    let track_id = TrackId::from_uri(&uri)?;
+        .next()
+        .ok_or_else(|| eyre!("No Spotify URI/URL specified"))?;
+    let track_id = spotify::parse_track_id(&uri)?;
     let raw_track_id = base62::decode(track_id.id())
         .map_err(|e| eyre!("Failed to decode the track ID: {e}"))?
         .to_be_bytes();

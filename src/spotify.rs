@@ -1,6 +1,6 @@
 use color_eyre::Result;
 use rspotify::{
-    model::{Modality, TrackId},
+    model::{IdError, Modality, TrackId},
     prelude::BaseClient,
     ClientCredsSpotify, Credentials,
 };
@@ -70,4 +70,18 @@ impl Spotify {
             time_signature: features.time_signature,
         })
     }
+}
+
+pub fn parse_track_id(uri_or_url: &str) -> Result<TrackId, IdError> {
+    let id = if uri_or_url.starts_with("https://open.spotify.com/track/") {
+        let id = &uri_or_url[31..];
+        if let Some(query) = id.find('?') {
+            &id[..query]
+        } else {
+            id
+        }
+    } else {
+        uri_or_url
+    };
+    TrackId::from_id_or_uri(id)
 }
